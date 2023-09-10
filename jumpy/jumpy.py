@@ -32,8 +32,8 @@ game_over = False
 score = 0
 fade_counter = 0
 
-if os.path.exists('score.txt'):
-	with open('score.txt', 'r') as file:
+if os.path.exists('score/score.txt'):
+	with open('score/score.txt', 'r') as file:
 		high_score = int(file.read())
 else:
 	high_score = 0
@@ -48,9 +48,9 @@ font_small = pygame.font.SysFont('Lucida Sans', 20)
 font_big = pygame.font.SysFont('Lucida Sans', 24)
 
 #load images
-jumpy_image = pygame.image.load('jump.png').convert_alpha()
-bg_image = pygame.image.load('bg.png').convert_alpha()
-platform_image = pygame.image.load('wood.png').convert_alpha()
+jumpy_image = pygame.image.load('assets/jump.png').convert_alpha()
+bg_image = pygame.image.load('assets/bg.png').convert_alpha()
+platform_image = pygame.image.load('assets/wood.png').convert_alpha()
 
 #function for outputting text onto the screen
 def draw_text(text, font, text_col, x, y):
