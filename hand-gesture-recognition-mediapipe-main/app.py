@@ -548,5 +548,5 @@ if __name__ == '__main__':
     hand_gesture_thread = threading.Thread(target=hand_gesture_recognition)
     hand_gesture_thread.daemon = True
     hand_gesture_thread.start()
-    run_game()
+    # run_game()
     
