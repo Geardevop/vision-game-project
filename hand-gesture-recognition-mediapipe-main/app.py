@@ -64,7 +64,7 @@ def hand_gesture_recognition():
     mp_hands = mp.solutions.hands
     hands = mp_hands.Hands(
         static_image_mode=use_static_image_mode,
-        max_num_hands=1,
+        max_num_hands=2,
         min_detection_confidence=min_detection_confidence,
         min_tracking_confidence=min_tracking_confidence,
     )
@@ -130,6 +130,7 @@ def hand_gesture_recognition():
                                                   results.multi_handedness):
                 # Bounding box calculation
                 brect = calc_bounding_rect(debug_image, hand_landmarks)
+                print("brect"+brect)
                 # Landmark calculation
                 landmark_list = calc_landmark_list(debug_image, hand_landmarks)
 
@@ -225,6 +226,7 @@ def calc_landmark_list(image, landmarks):
         # landmark_z = landmark.z
 
         landmark_point.append([landmark_x, landmark_y])
+        print("landmark_x"+str(landmark_x), "landmark_y"+str(landmark_y))
 
     return landmark_point
 
@@ -491,7 +493,7 @@ def draw_bounding_rect(use_brect, image, brect):
 
     return image
 
-
+# ส่วนนี้จะเป็นสวนที่เขียนว่าตอนนี้มือของเราจะเป็นรูปอะไร ตามที่ classification ไว้
 def draw_info_text(image, brect, handedness, hand_sign_text,
                    finger_gesture_text):
     cv.rectangle(image, (brect[0], brect[1]), (brect[2], brect[1] - 22),
@@ -500,6 +502,8 @@ def draw_info_text(image, brect, handedness, hand_sign_text,
     info_text = handedness.classification[0].label[0:]
     if hand_sign_text != "":
         info_text = info_text + ':' + hand_sign_text
+
+    # ส่วนนี้จะเป็นสวนที่เขียนว่าตอนนี้มือของเราจะเป็นรูปอะไร ตามที่ classification ไว้ 
     cv.putText(image, info_text, (brect[0] + 5, brect[1] - 4),
                cv.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 1, cv.LINE_AA)
 
@@ -509,7 +513,6 @@ def draw_info_text(image, brect, handedness, hand_sign_text,
         cv.putText(image, "Finger Gesture:" + finger_gesture_text, (10, 60),
                    cv.FONT_HERSHEY_SIMPLEX, 1.0, (255, 255, 255), 2,
                    cv.LINE_AA)
-
     return image
 
 
@@ -539,14 +542,11 @@ def draw_info(image, fps, mode, number):
                        cv.LINE_AA)
     return image
 
-def run_game():
-    jumpy.run_game()
+# def run_game():
+#     jumpy.run_game()
     
 
 
 if __name__ == '__main__':
-    hand_gesture_thread = threading.Thread(target=hand_gesture_recognition)
-    hand_gesture_thread.daemon = True
-    hand_gesture_thread.start()
-    # run_game()
+   hand_gesture_recognition()
     
