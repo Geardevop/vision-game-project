@@ -8,6 +8,7 @@ import argparse
 import itertools
 from collections import Counter
 from collections import deque
+from multiprocessing import Process, Queue
 
 import cv2 as cv
 import numpy as np
@@ -17,6 +18,8 @@ from utils import CvFpsCalc
 from model import KeyPointClassifier
 from model import PointHistoryClassifier
 
+# Create a Queue for communication
+queue = Queue()
 
 def get_args():
     parser = argparse.ArgumentParser()
@@ -114,6 +117,7 @@ def hand_gesture_recognition():
         ret, image = cap.read()
         if not ret:
             break
+        image = cv.resize(image, (900, 600))
         image = cv.flip(image, 1)  # Mirror display
         debug_image = copy.deepcopy(image)
 
@@ -130,7 +134,6 @@ def hand_gesture_recognition():
                                                   results.multi_handedness):
                 # Bounding box calculation
                 brect = calc_bounding_rect(debug_image, hand_landmarks)
-                print("brect"+brect)
                 # Landmark calculation
                 landmark_list = calc_landmark_list(debug_image, hand_landmarks)
 
@@ -226,7 +229,7 @@ def calc_landmark_list(image, landmarks):
         # landmark_z = landmark.z
 
         landmark_point.append([landmark_x, landmark_y])
-        print("landmark_x"+str(landmark_x), "landmark_y"+str(landmark_y))
+     
 
     return landmark_point
 
@@ -485,9 +488,12 @@ def draw_landmarks(image, landmark_point):
     return image
 
 
-def draw_bounding_rect(use_brect, image, brect):
+def draw_bounding_rect(use_brect, image, brect, ):
     if use_brect:
         # Outer rectangle
+        # brect[0] = starterpoint
+        # brect[1] = endpoint
+        queue.put((brect[0], brect[1]))  # Put the start point into the Queue
         cv.rectangle(image, (brect[0], brect[1]), (brect[2], brect[3]),
                      (0, 0, 0), 1)
 
@@ -506,6 +512,7 @@ def draw_info_text(image, brect, handedness, hand_sign_text,
     # ส่วนนี้จะเป็นสวนที่เขียนว่าตอนนี้มือของเราจะเป็นรูปอะไร ตามที่ classification ไว้ 
     cv.putText(image, info_text, (brect[0] + 5, brect[1] - 4),
                cv.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 1, cv.LINE_AA)
+    queue.put(info_text)
 
     if finger_gesture_text != "":
         cv.putText(image, "Finger Gesture:" + finger_gesture_text, (10, 60),
@@ -517,10 +524,10 @@ def draw_info_text(image, brect, handedness, hand_sign_text,
 
 
 def draw_point_history(image, point_history):
-    for index, point in enumerate(point_history):
-        if point[0] != 0 and point[1] != 0:
-            cv.circle(image, (point[0], point[1]), 1 + int(index / 2),
-                      (152, 251, 152), 2)
+    # for index, point in enumerate(point_history):
+    #     if point[0] != 0 and point[1] != 0:
+    #         cv.circle(image, (point[0], point[1]), 1 + int(index / 2),
+    #                   (152, 251, 152), 2)
 
     return image
 
@@ -548,5 +555,14 @@ def draw_info(image, fps, mode, number):
 
 
 if __name__ == '__main__':
-   hand_gesture_recognition()
+    
+    from newGame import run_pygame  # Import the run_pygame function from pygame_script.py
+    pygame_process = Process(target=run_pygame, args=(queue,))
+    # Start the Pygame process
+    pygame_process.start()
+    # Call your hand gesture recognition function
+
+    hand_gesture_recognition()
+    # Wait for the Pygame process to finish (optional)
+    pygame_process.join()
     
