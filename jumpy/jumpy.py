@@ -3,6 +3,59 @@ import pygame
 import random
 import os
 
+
+#===========================================================================Image loading===================================================
+#hand Green
+close_left_green = pygame.image.load("asset/Hand_green/close_left.png")
+close_right_green = pygame.image.load("asset/Hand_green/close_right.png")
+love_left_green = pygame.image.load("asset/Hand_green/love_left.png")
+love_right_green = pygame.image.load("asset/Hand_green/love_right.png")
+ok_left_green = pygame.image.load("asset/Hand_green/ok_left.png")
+ok_right_green = pygame.image.load("asset/Hand_green/ok_right.png")
+one_left_green = pygame.image.load("asset/Hand_green/one_left.png")
+one_right_green = pygame.image.load("asset/Hand_green/one_right.png")
+open_left_green = pygame.image.load("asset/Hand_green/open_left.png")
+open_right_green = pygame.image.load("asset/Hand_green/open_right.png")
+
+#hand Red
+close_left_red = pygame.image.load("asset/Hand_red/close_left.png")
+close_right_red = pygame.image.load("asset/Hand_red/close_right.png")
+love_left_red = pygame.image.load("asset/Hand_red/love_left.png")
+love_right_red = pygame.image.load("asset/Hand_red/love_right.png")
+ok_left_red = pygame.image.load("asset/Hand_red/ok_left.png")
+ok_right_red = pygame.image.load("asset/Hand_red/ok_right.png")
+one_left_red = pygame.image.load("asset/Hand_red/one_left.png")
+one_right_red = pygame.image.load("asset/Hand_red/one_right.png")
+open_left_red = pygame.image.load("asset/Hand_red/open_left.png")
+
+
+#hand white
+close_left_white = pygame.image.load("asset/Hand_white/close_left.png")
+close_right_white = pygame.image.load("asset/Hand_white/close_right.png")
+love_left_white = pygame.image.load("asset/Hand_white/love_left.png")
+love_right_white = pygame.image.load("asset/Hand_white/love_right.png")
+ok_left_white = pygame.image.load("asset/Hand_white/ok_left.png")
+ok_right_white = pygame.image.load("asset/Hand_white/ok_right.png")
+one_left_white = pygame.image.load("asset/Hand_white/one_left.png")
+one_right_white = pygame.image.load("asset/Hand_white/one_right.png")
+open_left_white = pygame.image.load("asset/Hand_white/open_left.png")
+
+#map  and menuBG
+map1 = pygame.image.load("asset/Map/map1.png")
+map2 = pygame.image.load("asset/Map/map2.png")
+map3 = pygame.image.load("asset/Map/map3.png")
+menuBg = pygame.image.load("asset/Map/MenuBG.png")
+
+#healtbar
+zeroToFour = pygame.image.load("asset/Healt_bar/0-4.png")
+oneToFour = pygame.image.load("asset/Healt_bar/1-4.png")
+twoToFour = pygame.image.load("asset/Healt_bar/2-4.png")
+threeToFour = pygame.image.load("asset/Healt_bar/3-4.png")
+fourToFour = pygame.image.load("asset/Healt_bar/4-4.png")
+
+
+
+
 #initialise pygame
 pygame.init()
 
