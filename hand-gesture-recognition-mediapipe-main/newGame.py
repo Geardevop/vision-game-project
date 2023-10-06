@@ -135,9 +135,9 @@ def run_pygame(queue):
             if rect_of_hand_user_x < topRightRect and self.rect.y < topRightHand and self.rect.colliderect(hand_rect) and self.name == hand_result_name and self.side == hand_result_side:
                 SCORE +=1
                 self.kill()
-            else:
-                hpLIst = [threeToFour, twoToFour, oneToFour,zeroToFour]
-                hpImage = hpLIst[countHp]
+            # else:
+            #     hpLIst = [threeToFour, twoToFour, oneToFour,zeroToFour]
+            #     hpImage = hpLIst[countHp]
 
 
     falling_rectangles = pygame.sprite.Group()
@@ -146,17 +146,24 @@ def run_pygame(queue):
     target_fps = 120
     running = True
     while running:
+        if SCORE >= 10 and SCORE <= 20:
+            map = map2
+        elif SCORE >= 20 and SCORE <= 30:
+            map = map3
+        else:
+            map = map1
         # หยุดเกม
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
         # Clear the screen
         screen.fill(WHITE)
-        screen.blit(map1, (0, 0))
+        screen.blit(map, (0, 0))
         # สร้างกล่องที่ตกลงมา
         if len(falling_rectangles) < 2 and random.randint(1, 100) < 5:
             falling_rectangles.add(FallingRectangle())
 
+        screen.blit(map, (0, 0))    
         # Update and draw falling rectangles
         falling_rectangles.update()
         falling_rectangles.draw(screen) 
@@ -186,10 +193,12 @@ def run_pygame(queue):
             for rect in falling_rectangles:
                 rect.checkIsOverlaping(x, y, hand_rect, hand_name, side_hand)
 
+        # Update the background image      
         #เช็คว่ามือโดนวัตถุไหม
         screen.blit(hand, (x, y))
         #วาด Scores
         score_text = font.render(f"Score: {SCORE}", True, (255, 0,0))
+    
         screen.blit(score_text, (10, 10))  # Adjust the position as needed
         screen.blit( pygame.transform.scale(hpImage, (200,100)),(10,20))
         # Draw มือจาก position
@@ -201,6 +210,5 @@ def run_pygame(queue):
 if __name__ == '__main__':
     # Create a Queue for communication
     queue = Queue()
-
     # Start the Pygame process
     run_pygame(queue)
