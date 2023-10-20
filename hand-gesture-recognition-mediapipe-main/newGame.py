@@ -67,9 +67,9 @@ def run_pygame(queue):
     GREEN = (0, 255, 0)
     # Initialize Pygame
     pygame.init()
-
+    gameStart = True
     #hand picture
-    hand = pygame.image.load("C:\\Users\\wallr\\Pictures\\Saved Pictures\\image.png")
+    hand = close_left_red
     hand = pygame.transform.scale(hand, (80, 80))
     #Hp
     hpImage = fourToFour
@@ -86,14 +86,14 @@ def run_pygame(queue):
     screen = pygame.display.set_mode((screen_width, screen_height))
     pygame.display.set_caption("Pygame Rectangle")
     # Load the background image
-    map1 = pygame.image.load("assets/Map/map1.png")
+    map1 = pygame.image.load("assets/Map/MenuBG.png")
 
 
-    falling_rectangles_hand = ["Open", "Close","OK"]
+    falling_rectangles_hand = ["Open", "Close","OK","LOVE","ONE"]
     falling_rectangles_side = ["Left", "Right"]
     pygame.font.init()
     font = pygame.font.Font(pygame.font.get_default_font(), 36) 
-
+    start_text = font.render("Press Spacebar to Start", True, (255, 255, 255))
     # Create a Pygame window
     screen = pygame.display.set_mode((screen_width, screen_height))
     pygame.display.set_caption("Pygame Rectangle")
@@ -125,6 +125,14 @@ def run_pygame(queue):
                 self.image =  pygame.transform.scale(ok_left_green, (80,80))
             if self.name == "OK" and self.side == "Right":
                 self.image = pygame.transform.scale(ok_right_green, (80,80))
+            if self.name == "LOVE" and self.side == "Right":
+                self.image = pygame.transform.scale(love_right_green, (80,80))
+            if self.name == "LOVE" and self.side == "Left":
+                self.image = pygame.transform.scale(love_left_green, (80,80))
+            if self.name == "ONE" and self.side == "Right":
+                self.image = pygame.transform.scale(one_right_green, (80,80))
+            if self.name == "ONE" and self.side == "Left":
+                self.image = pygame.transform.scale(one_left_green, (80,80))
         #check hand of user is overlapping of FallingRectangle
         def checkIsOverlaping(self, rect_of_hand_user_x, rect_of_hand_user_y, hand_rect, hand_result_name, hand_result_side):
             topRightHand = rect_of_hand_user_x+80;
@@ -138,13 +146,12 @@ def run_pygame(queue):
             # else:
             #     hpLIst = [threeToFour, twoToFour, oneToFour,zeroToFour]
             #     hpImage = hpLIst[countHp]
-
-
+            
     falling_rectangles = pygame.sprite.Group()
- 
     clock = pygame.time.Clock()
     target_fps = 120
     running = True
+
     while running:
         if SCORE >= 10 and SCORE <= 20:
             map = map2
@@ -156,12 +163,64 @@ def run_pygame(queue):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+        screen.fill(WHITE)
+        screen.blit(map, (0, 0))
+        if gameStart:
+            screen.fill(WHITE)
+            screen.blit(map, (0, 0))
+            hand = pygame.transform.scale(hand, (80, 80))
+            start_bg = pygame.image.load("assets/Map/MenuBG.png")
+            font = pygame.font.Font(None, 36)
+            text = font.render("OK TO START GAME", True, (255, 255, 255))
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+                    return
+            screen.blit(start_bg, (0, 0))
+            pygame.display.update()
+            if not queue.empty():
+                start_point = queue.get()
+                info_text = queue.get()
+                text = info_text.split(":")
+                side_hand = text[0]
+                hand_name = text[1].strip()
+                if(hand_name == "OK"and side_hand=="Left"):
+                    hand = pygame.transform.scale(ok_left_white, (80,80))
+                if(hand_name == "OK"and side_hand=="Right"):
+                    hand = pygame.transform.scale(ok_right_white, (80,80))
+                    gameStart = False
+                if(hand_name == "Open" and side_hand=="Left"):
+                    hand = pygame.transform.scale(open_left_white, (80,80))
+                if(hand_name == "Open" and side_hand=="Right"):
+                    hand = pygame.transform.scale(open_right_white, (80,80))
+                if(hand_name == "Close" and side_hand=="Left"):
+                    hand = pygame.transform.scale(close_left_white, (80,80))
+                if(hand_name == "Close" and side_hand=="Right"):
+                    hand = pygame.transform.scale(close_right_white, (80,80))
+                if(hand_name == "Love" and side_hand=="Left"):
+                    hand = pygame.transform.scale(love_left_white, (80,80))
+                if(hand_name == "Love" and side_hand=="Right"):
+                    hand = pygame.transform.scale(love_right_white, (80,80))
+                if(hand_name == "One" and side_hand=="Left"):
+                    hand = pygame.transform.scale(one_left_white, (80,80))
+                if(hand_name == "One" and side_hand=="Right"):
+                    hand = pygame.transform.scale(one_right_white, (80,80))
+                x, y = start_point
+                # ตัวจับ event
+                hand_rect = pygame.Rect(x, y, 80, 80)
+                #check overlapping rectangles
+                for rect in falling_rectangles:
+                    rect.checkIsOverlaping(x, y, hand_rect, hand_name, side_hand)
+            screen.blit(hand, (x, y))
         # Clear the screen
         screen.fill(WHITE)
         screen.blit(map, (0, 0))
-        # สร้างกล่องที่ตกลงมา
-        if len(falling_rectangles) < 2 and random.randint(1, 100) < 5:
-            falling_rectangles.add(FallingRectangle())
+        if(gameStart == False):
+            # สร้างกล่องที่ตกลงมา
+            if len(falling_rectangles) < 2 and random.randint(1, 100) < 5:
+                    falling_rectangles.add(FallingRectangle())
 
         screen.blit(map, (0, 0))    
         # Update and draw falling rectangles
@@ -186,6 +245,14 @@ def run_pygame(queue):
                hand = pygame.transform.scale(close_left_white, (80,80))
             if(hand_name == "Close" and side_hand=="Right"):
                hand = pygame.transform.scale(close_right_white, (80,80))
+            if(hand_name == "Love" and side_hand=="Left"):
+                hand = pygame.transform.scale(love_left_white, (80,80))
+            if(hand_name == "Love" and side_hand=="Right"):
+                hand = pygame.transform.scale(love_right_white, (80,80))
+            if(hand_name == "One" and side_hand=="Left"):
+                hand = pygame.transform.scale(one_left_white, (80,80))
+            if(hand_name == "One" and side_hand=="Right"):
+                hand = pygame.transform.scale(one_right_white, (80,80))
             x, y = start_point
             # ตัวจับ event
             hand_rect = pygame.Rect(x, y, 80, 80)
@@ -197,10 +264,10 @@ def run_pygame(queue):
         #เช็คว่ามือโดนวัตถุไหม
         screen.blit(hand, (x, y))
         #วาด Scores
-        score_text = font.render(f"Score: {SCORE}", True, (255, 0,0))
+        # score_text = font.render(f"Score: {SCORE}", True, (255, 0,0))
     
-        screen.blit(score_text, (10, 10))  # Adjust the position as needed
-        screen.blit( pygame.transform.scale(hpImage, (200,100)),(10,20))
+        # screen.blit(score_text, (10, 10))  # Adjust the position as needed
+        # screen.blit( pygame.transform.scale(hpImage, (200,100)),(10,20))
         # Draw มือจาก position
         # Update the display
         pygame.display.flip()
